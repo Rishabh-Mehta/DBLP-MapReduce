@@ -1,4 +1,4 @@
-package com.dblp.mapreduce.author_venue
+package com.dblp.mapreduce.author_publication
 
 import java.io.ByteArrayInputStream
 import java.lang
@@ -13,23 +13,13 @@ import org.slf4j.LoggerFactory
 import scala.collection.View.Empty.take
 import scala.collection.mutable
 import scala.jdk.CollectionConverters.IterableHasAsScala
-//import scala.xml.{Elem, XML}
 
-object Author_Venue {
+object Top_Author_Venue {
   BasicConfigurator.configure()
-  val logger = LoggerFactory.getLogger(Author_Venue.getClass)
-
-
-
-
+  val logger = LoggerFactory.getLogger(Top_Author_Venue.getClass)
   class Map extends Mapper[LongWritable, Text, Text, IntWritable] {
-
-
-    override def map(key: LongWritable, value: Text,
-                     context: Mapper[LongWritable, Text, Text, IntWritable]#Context): Unit = {
-
+    override def map(key: LongWritable, value: Text, context: Mapper[LongWritable, Text, Text, IntWritable]#Context): Unit = {
       try {
-        //val document = ParseUtils.formatXml(value.toString).toString()
         var document = value.toString
         document = document.replaceAll("\n", "").replaceAll("&", "&amp;").replaceAll("'", "&apos;").replaceAll("^(.+)(<)([^>/a-zA-z_]{1}[^>]*)(>)(.+)$", "$1&lt;$3&gt;$5")
         val reader = XMLInputFactory.newInstance.createXMLStreamReader(new ByteArrayInputStream(document.getBytes()))
@@ -40,19 +30,14 @@ object Author_Venue {
         var xmlElement = ""
         var venue = ""
         var author =""
-
         while (reader.hasNext) {
           try {
             reader.next
             if (reader.isStartElement) {
-
               if (firsttag) {
-
                 xmlElement = reader.getLocalName
-
                 if (venueMap.exists(vMap => vMap._1 == xmlElement)) {
                   venue = venueMap.get(xmlElement).get
-
                 }
                 firsttag = false
               }
@@ -71,12 +56,6 @@ object Author_Venue {
           }
         }
         reader.close()
-//        if (authorCount > 0 && venue != "") {
-//          val output = authorCount + "-" + venue
-//          print("OUTPUT"+output+"\n")
-//          logger.info("OUTPUT"+output)
-//          context.write(new Text(output), outValue)
-//        }
       }
       catch {
         case e: Exception =>
@@ -85,23 +64,29 @@ object Author_Venue {
       }
     }
   }
-
-  class Reduce extends Reducer[Text, IntWritable, Text, IntWritable] {
+  class Reduce extends Reducer[Text, IntWritable, Text, Text] {
     var result = new IntWritable
-    override def reduce(key: Text, values: lang.Iterable[IntWritable], context: Reducer[Text, IntWritable, Text, IntWritable]#Context): Unit = {
+    var top_authors_venue = new mutable.HashMap[String, Integer]()
+    override def reduce(key: Text, values: lang.Iterable[IntWritable], context: Reducer[Text, IntWritable, Text, Text]#Context): Unit = {
       var sum = 0
       val scalaValues = values.asScala
-      //val keys = key.toString.split(",")
       scalaValues.foreach(values => sum += values.get)
       result.set(sum)
       logger.info(key.toString)
-      logger.debug("\n"+"+Reducer Output "+key+":"+result+"\n")
-      context.write(key, result)
+      logger.debug("\n" + "+Reducer Output " + key + ":" + result + "\n")
+      //context.write(key, result)
+      top_authors_venue.put(key.toString, result.get())
+    }
+
+    override def cleanup(context: Reducer[Text, IntWritable, Text, Text]#Context): Unit = {
+      val grouped = top_authors_venue.groupBy((k) => k._1.toString.split(",")(1))
+      grouped.foreach(k => context.write(new Text(k._2.toSeq.sortWith(_._2 > _._2).take(10).toString), new Text(k._1)))
 
     }
 
 
   }
+
 
 
 }
