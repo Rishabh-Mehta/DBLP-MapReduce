@@ -52,27 +52,27 @@ object MapReduce {
 //        else 1)
 
 
-//      } else if (jobname.trim.equals("PublicationVenueOneAuthor")) {
-//        logger.info("Starting publication venue , Publications at each Venue with one Author")
-//        val configuration = new Configuration
-//        val job = Job.getInstance(configuration, jobname)
-//        configuration.set("mapreduce.output.textoutputformat.separator", ",")
-//        val inputPath = new Path("home/hadoop/input")
-//        val outputPathFirstJob = new Path("home/hadoop/output/"+jobname)
-//        outputPathFirstJob.getFileSystem(configuration).delete(outputPathFirstJob, true)
-//        job.setJarByClass(Author_Venue.getClass)
-//        job.setMapperClass(classOf[com.dblp.mapreduce.publication_venue.Publication_Venue_OneAuthor.Map])
-//        job.setReducerClass(classOf[com.dblp.mapreduce.publication_venue.Publication_Venue_OneAuthor.Reduce])
-//        job.setOutputKeyClass(classOf[Text])
-//        job.setOutputValueClass(classOf[IntWritable])
-//        job.setMapOutputKeyClass(classOf[Text])
-//        job.setMapOutputValueClass(classOf[IntWritable])
-//        job.setInputFormatClass(classOf[XmlInputFormat])
-//        job.setOutputFormatClass(classOf[TextOutputFormat[_, _]])
-//        FileInputFormat.addInputPath(job, inputPath)
-//        FileOutputFormat.setOutputPath(job, outputPathFirstJob)
-//        System.exit(if (job.waitForCompletion(true)) 0
-//        else 1)
+      } else if (jobname.trim.equals("PublicationVenueOneAuthor")) {
+        logger.info("Starting publication venue , Publications at each Venue with one Author")
+        val configuration = new Configuration
+        val job = Job.getInstance(configuration, jobname)
+        configuration.set("mapreduce.output.textoutputformat.separator", ",")
+        val inputPath = new Path("home/hadoop/input")
+        val outputPathFirstJob = new Path("home/hadoop/output/"+jobname)
+        outputPathFirstJob.getFileSystem(configuration).delete(outputPathFirstJob, true)
+        job.setJarByClass(Author_Venue.getClass)
+        job.setMapperClass(classOf[com.dblp.mapreduce.publication_venue.Publication_Venue_OneAuthor.Map])
+        job.setReducerClass(classOf[com.dblp.mapreduce.publication_venue.Publication_Venue_OneAuthor.Reduce])
+        job.setOutputKeyClass(classOf[Text])
+        job.setOutputValueClass(classOf[IntWritable])
+        job.setMapOutputKeyClass(classOf[Text])
+        job.setMapOutputValueClass(classOf[IntWritable])
+        job.setInputFormatClass(classOf[XmlInputFormat])
+        job.setOutputFormatClass(classOf[TextOutputFormat[_, _]])
+        FileInputFormat.addInputPath(job, inputPath)
+        FileOutputFormat.setOutputPath(job, outputPathFirstJob)
+        System.exit(if (job.waitForCompletion(true)) 0
+        else 1)
 
 
       } else if (jobname.trim.equals("PublicationwithHighestAuthorsatVenues")) {
@@ -120,26 +120,26 @@ object MapReduce {
 //        else 1)
       }
       else if (jobname.trim.equals("AuthorStats_LOW")) {
-        logger.info("Starting AuthorStats  Least 100 collaborating authors job")
-        val configuration = new Configuration
-        val job = Job.getInstance(configuration, jobname)
-        configuration.set("mapreduce.output.textoutputformat.separator", ",")
-        val inputPath = new Path("home/hadoop/input")
-        val outputPathFirstJob = new Path("home/hadoop/output/"+jobname)
-        outputPathFirstJob.getFileSystem(configuration).delete(outputPathFirstJob, true)
-        job.setJarByClass(Author_Venue.getClass)
-        job.setMapperClass(classOf[com.dblp.mapreduce.author_stats.Author_Low.Map])
-        job.setReducerClass(classOf[com.dblp.mapreduce.author_stats.Author_Low.Reduce])
-        job.setOutputKeyClass(classOf[Text])
-        job.setOutputValueClass(classOf[IntWritable])
-        job.setMapOutputKeyClass(classOf[Text])
-        job.setMapOutputValueClass(classOf[IntWritable])
-        job.setInputFormatClass(classOf[XmlInputFormat])
-        job.setOutputFormatClass(classOf[TextOutputFormat[_, _]])
-        FileInputFormat.addInputPath(job, inputPath)
-        FileOutputFormat.setOutputPath(job, outputPathFirstJob)
-        System.exit(if (job.waitForCompletion(true)) 0
-        else 1)
+//        logger.info("Starting AuthorStats  Least 100 collaborating authors job")
+//        val configuration = new Configuration
+//        val job = Job.getInstance(configuration, jobname)
+//        configuration.set("mapreduce.output.textoutputformat.separator", ",")
+//        val inputPath = new Path("home/hadoop/input")
+//        val outputPathFirstJob = new Path("home/hadoop/output/"+jobname)
+//        outputPathFirstJob.getFileSystem(configuration).delete(outputPathFirstJob, true)
+//        job.setJarByClass(Author_Venue.getClass)
+//        job.setMapperClass(classOf[com.dblp.mapreduce.author_stats.Author_Low.Map])
+//        job.setReducerClass(classOf[com.dblp.mapreduce.author_stats.Author_Low.Reduce])
+//        job.setOutputKeyClass(classOf[Text])
+//        job.setOutputValueClass(classOf[IntWritable])
+//        job.setMapOutputKeyClass(classOf[Text])
+//        job.setMapOutputValueClass(classOf[IntWritable])
+//        job.setInputFormatClass(classOf[XmlInputFormat])
+//        job.setOutputFormatClass(classOf[TextOutputFormat[_, _]])
+//        FileInputFormat.addInputPath(job, inputPath)
+//        FileOutputFormat.setOutputPath(job, outputPathFirstJob)
+//        System.exit(if (job.waitForCompletion(true)) 0
+//        else 1)
       }
 
       else if (jobname.trim.equals("MeanMedianStatistics")) {
