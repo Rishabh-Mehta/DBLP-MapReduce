@@ -50,7 +50,7 @@ object MapReduce {
 
 
       } else if (jobname.trim.equals("PublicationVenueOneAuthor")) {
-        logger.info("Starting publication venue , Publications at each Venue with one Author")
+        logger.info("Starting publication_venue , Publications at each Venue with one Author")
         job.setJarByClass(com.dblp.mapreduce.publication_venue.Publication_Venue_OneAuthor.getClass)
         job.setMapperClass(classOf[com.dblp.mapreduce.publication_venue.Publication_Venue_OneAuthor.Map])
         job.setReducerClass(classOf[com.dblp.mapreduce.publication_venue.Publication_Venue_OneAuthor.Reduce])
@@ -79,14 +79,15 @@ object MapReduce {
         job.waitForCompletion(true)
       }
 
-      else if (jobname.trim.equals("MeanMedianStatistics")) {
-        logger.info("Starting MeanMedianStatistics calculation job")
-        //MeanMedianStatistics.runJob(configObj.inputFile, configObj.outputFile)
+      else if (jobname.trim.equals("Author_Years")) {
+        logger.info("Starting Author_Years  Authors publishing without interruption for N >=10 years")
+        job.setJarByClass(com.dblp.mapreduce.author_stats.Author_Low.getClass)
+        job.setMapperClass(classOf[com.dblp.mapreduce.author_years.Author_Years.Map])
+        job.setReducerClass(classOf[com.dblp.mapreduce.author_years.Author_Years.Reduce])
+        job.waitForCompletion(true)
+
       }
-      else if (jobname.trim.equals("MeanMedianStatisticsWithStratification")) {
-        logger.info("Starting MeanMedianStatisticsWithStratification calculation job")
-        //MeanMedianStatisticsWithStratification.runJob(configObj.inputFile, configObj.outputFile)
-      }
+
     })
     logger.info("Completed All Jobs Successfully")
     System.exit(1)

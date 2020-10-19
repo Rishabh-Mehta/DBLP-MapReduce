@@ -41,15 +41,15 @@ object Author_Top {
                   author = reader.getElementText
                   if (author.toString != "") {
                     authors = author
+                    authorCount += 1
                   }
-                  authorCount += 1
                   firstauth = false
                 }
                 else {
-                  authorCount += 1
                   author = reader.getElementText
                   if (author.toString != "") {
                     authors = authors + "," + author
+                    authorCount += 1
                   }
                 }
               }

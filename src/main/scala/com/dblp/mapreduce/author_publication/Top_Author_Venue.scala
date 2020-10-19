@@ -3,7 +3,7 @@ package com.dblp.mapreduce.author_publication
 import java.io.ByteArrayInputStream
 import java.lang
 
-import com.dblp.mapreduce.utils.{ParseUtils, Utils}
+import com.dblp.mapreduce.utils.Utils
 import javax.xml.stream.XMLInputFactory
 import org.apache.hadoop.io.{IntWritable, LongWritable, Text}
 import org.apache.hadoop.mapreduce.{Mapper, Reducer}
