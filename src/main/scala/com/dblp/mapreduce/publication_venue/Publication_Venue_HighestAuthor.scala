@@ -31,7 +31,7 @@ object Publication_Venue_HighestAuthor {
 
 
   BasicConfigurator.configure()
-  val logger: Logger = LoggerFactory.getLogger(Publication_Venue_OneAuthor.getClass)
+  val logger: Logger = LoggerFactory.getLogger(Publication_Venue_HighestAuthor.getClass)
 
 
   class Map extends Mapper[LongWritable, Text, Text, IntWritable] {
@@ -46,7 +46,7 @@ object Publication_Venue_HighestAuthor {
 
         val preprocessedXML = xml.XML.loadString(inputXml)
         val authors = (preprocessedXML \\ "author").map(author => author.text.toLowerCase.trim).toList.sorted
-        val publication = (preprocessedXML \\ "title")
+        val publication = (preprocessedXML \\ "@title").toString()
         val authorCount = authors.size
         var document = value.toString
         document = document.replaceAll("\n", "").replaceAll("&", "&amp;").replaceAll("'", "&apos;").replaceAll("^(.+)(<)([^>/a-zA-z_]{1}[^>]*)(>)(.+)$", "$1&lt;$3&gt;$5")
@@ -63,7 +63,7 @@ object Publication_Venue_HighestAuthor {
                 xmlElement = reader.getLocalName
                 if (venueMap.exists(vMap => vMap._1 == xmlElement)) {
                   venue = venueMap.get(xmlElement).get
-                  break
+
                 }
                 firsttag = false
               }

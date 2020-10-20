@@ -26,15 +26,16 @@ import scala.util.control.Breaks.break
  *           Venue :  (((Author,Venue),Publication_Count),((Author,Venue),Publication_Count),...) Top 10
  */
 
-object Top_Author_Venue {
+object Top_Authors_Published_Venue {
   BasicConfigurator.configure()
-  val logger = LoggerFactory.getLogger(Top_Author_Venue.getClass)
+  val logger = LoggerFactory.getLogger(Top_Authors_Published_Venue.getClass)
 
 
   class Map extends Mapper[LongWritable, Text, Text, IntWritable] {
     override def map(key: LongWritable, value: Text, context: Mapper[LongWritable, Text, Text, IntWritable]#Context): Unit = {
 
       try {
+
         val fileDtd = getClass.getClassLoader.getResource("dblp.dtd").toURI
         val inputXml =
           s"""<?xml version="1.0" encoding="ISO-8859-1"?>
@@ -42,7 +43,8 @@ object Top_Author_Venue {
       <dblp>""" + value.toString + "</dblp>"
         val preprocessedXML = xml.XML.loadString(inputXml)
         val authors = (preprocessedXML \\ "author").map(author => author.text.toLowerCase.trim).toList.sorted
-        val publication = (preprocessedXML \\ "title")
+
+        val publication = (preprocessedXML \\ "@title").toString()
         val authorCount = authors.size
         var document = value.toString
         document = document.replaceAll("\n", "").replaceAll("&", "&amp;").replaceAll("'", "&apos;").replaceAll("^(.+)(<)([^>/a-zA-z_]{1}[^>]*)(>)(.+)$", "$1&lt;$3&gt;$5")
@@ -61,7 +63,7 @@ object Top_Author_Venue {
                 xmlElement = reader.getLocalName
                 if (venueMap.exists(vMap => vMap._1 == xmlElement)) {
                   venue = venueMap.get(xmlElement).get
-                  break
+
                 }
                 firsttag = false
               } } }

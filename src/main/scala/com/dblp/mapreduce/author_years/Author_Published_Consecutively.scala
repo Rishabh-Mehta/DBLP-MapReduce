@@ -2,7 +2,7 @@ package com.dblp.mapreduce.author_years
 
 import java.lang
 
-import com.dblp.mapreduce.author_stats.Author_Top
+import com.dblp.mapreduce.author_stats.Author_Most_Coauthor
 import org.apache.hadoop.io.{IntWritable, LongWritable, Text}
 import org.apache.hadoop.mapreduce.{Mapper, Reducer}
 import org.apache.log4j.BasicConfigurator
@@ -18,10 +18,10 @@ import scala.collection.mutable
  */
 
 
-object Author_Years {
+object Author_Published_Consecutively {
 
   BasicConfigurator.configure()
-  val logger: Logger = LoggerFactory.getLogger(Author_Top.getClass)
+  val logger: Logger = LoggerFactory.getLogger(Author_Published_Consecutively.getClass)
 
   class Map extends Mapper[LongWritable, Text, Text, IntWritable] {
     override def map(key: LongWritable, value: Text, context: Mapper[LongWritable, Text, Text, IntWritable]#Context): Unit = {
@@ -31,17 +31,18 @@ object Author_Years {
           s"""<?xml version="1.0" encoding="ISO-8859-1"?>
           <!DOCTYPE dblp SYSTEM "$fileDtd">
           <dblp>""" + value.toString + "</dblp>"
-
         val preprocessedXML = xml.XML.loadString(inputXml)
         val authors = (preprocessedXML \\ "author").map(author => author.text.toLowerCase.trim).toList.sorted
-        val pub_year = (preprocessedXML \\ "year").toString()
+        val pub_year = (preprocessedXML \\ "@year").toString()
         val authorCount = authors.size
 
         if (authorCount > 0 && pub_year != "") {
           val output = new IntWritable(pub_year.toInt)
+
           for (author_x <- authors) {
             context.write(new Text(author_x.toString), output)
-            //logger.info("Mapper Output "+author_x.toString+" "+output)
+
+
           }
         }
       }
