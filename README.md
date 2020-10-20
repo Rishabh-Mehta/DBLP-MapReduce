@@ -40,15 +40,16 @@ and edit JobsToRun variable to include the jobs that you want to run .Default va
     
 ```    
     $ /usr/local/hadoop/bin/hadoop jar ~/rishabh_mehta_hw2/project/target/scala-2.12/rishabh_mehta_hw2-assembly-0.1.jar  ~/PATH_TO_INPUTDIR ~/PATH_TO_OUTPUTDIR
+    
+    Change usr/local/hadoop/bin/ to your local hadoop installation (HADOOP_HOME)  
    
 ```   
 ```
-Sample
+    Sample
     $ /usr/local/hadoop/bin/hadoop jar ~/rishabh_mehta_hw2/project/target/scala-2.12/rishabh_mehta_hw2-assembly-0.1.jar ~/home/hadoop/input/ ~/home/hadoop/output/
 ```
      
-     Change usr/local/hadoop/bin/ to your local hadoop installation (HADOOP_HOME)                                                                                                                                                                                                                                                                              
-    * Jobs can alternatively run on AWS EMR
-        * For more details on how to run in AWS EMR refer to the video below
+* Jobs can alternatively run on AWS EMR
+    * For more details on how to run in AWS EMR refer to the video below
 
   
