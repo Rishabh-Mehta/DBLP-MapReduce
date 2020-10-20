@@ -35,7 +35,7 @@ object Author_Low {
 
       val preprocessedXML = xml.XML.loadString(inputXml)
       val authors = (preprocessedXML \\ "author").map(author => author.text.toLowerCase.trim).toList.sorted
-      val publication = (preprocessedXML \\ "title")
+      val publication = (preprocessedXML \\ "@title").toString()
       val authorCount = authors.size
 
       if (authorCount > 0 && publication != "") {
