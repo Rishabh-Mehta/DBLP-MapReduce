@@ -29,7 +29,7 @@ object MapReduce {
       val configuration = new Configuration
       val job = Job.getInstance(configuration, jobname)
       configuration.set("mapreduce.output.textoutputformat.separator", ",")
-      val outputPathFirstJob = new Path("home/hadoop/output/" + jobname)
+      val outputPathFirstJob = new Path("s3://com.dblp.mapreduce.rmehta35/output/"+ jobname)
       outputPathFirstJob.getFileSystem(configuration).delete(outputPathFirstJob, true)
       job.setOutputKeyClass(classOf[Text])
       job.setOutputValueClass(classOf[IntWritable])
