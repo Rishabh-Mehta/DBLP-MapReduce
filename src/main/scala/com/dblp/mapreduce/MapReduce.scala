@@ -10,6 +10,7 @@ import org.apache.hadoop.io.{IntWritable, Text}
 import org.apache.hadoop.mapreduce.Job
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat
 import org.apache.hadoop.mapreduce.lib.output.{FileOutputFormat, TextOutputFormat}
+
 import org.apache.log4j.BasicConfigurator
 import org.slf4j.{Logger, LoggerFactory}
 
