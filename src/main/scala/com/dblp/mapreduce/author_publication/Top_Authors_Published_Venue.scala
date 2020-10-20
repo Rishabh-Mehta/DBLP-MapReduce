@@ -26,9 +26,9 @@ import scala.util.control.Breaks.break
  *           Venue :  (((Author,Venue),Publication_Count),((Author,Venue),Publication_Count),...) Top 10
  */
 
-object Top_Author_Venue {
+object Top_Authors_Published_Venue {
   BasicConfigurator.configure()
-  val logger = LoggerFactory.getLogger(Top_Author_Venue.getClass)
+  val logger = LoggerFactory.getLogger(Top_Authors_Published_Venue.getClass)
 
 
   class Map extends Mapper[LongWritable, Text, Text, IntWritable] {

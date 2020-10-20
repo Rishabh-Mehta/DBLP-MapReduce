@@ -2,7 +2,7 @@ package com.dblp.mapreduce.author_years
 
 import java.lang
 
-import com.dblp.mapreduce.author_stats.Author_Top
+import com.dblp.mapreduce.author_stats.Author_Most_Coauthor
 import org.apache.hadoop.io.{IntWritable, LongWritable, Text}
 import org.apache.hadoop.mapreduce.{Mapper, Reducer}
 import org.apache.log4j.BasicConfigurator
@@ -18,10 +18,10 @@ import scala.collection.mutable
  */
 
 
-object Author_Years {
+object Author_Published_Consecutively {
 
   BasicConfigurator.configure()
-  val logger: Logger = LoggerFactory.getLogger(Author_Years.getClass)
+  val logger: Logger = LoggerFactory.getLogger(Author_Published_Consecutively.getClass)
 
   class Map extends Mapper[LongWritable, Text, Text, IntWritable] {
     override def map(key: LongWritable, value: Text, context: Mapper[LongWritable, Text, Text, IntWritable]#Context): Unit = {
