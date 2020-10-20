@@ -25,8 +25,7 @@ git clone https://rmehta35@bitbucket.org/cs441-fall2020/rishabh_mehta_hw2.git
     * PublicationVenueOneAuthor
     * Author_Published_Consecutively
 
-* Open ```
-rishabh_mehta_hw2/src/main/resources/application.conf ``` 
+* Open `rishabh_mehta_hw2/src/main/resources/application.conf `
 and edit JobsToRun variable to include the jobs that you want to run .Default value set will run all Jobs
 * Additional details about implementation of Mapper and Reducer for the above jobs are present in their respective classes.
 * Once JobsToRun is finalised run the following commands to build JAR 
@@ -34,18 +33,18 @@ and edit JobsToRun variable to include the jobs that you want to run .Default va
     $ sbt clean
     $ sbt assembly
 ```
-* This will create a JAR in<br />  
-> ```/home/rishabh/rishabh_mehta_hw2/project/target/scala-2.12/rishabh_mehta_hw2-assembly-0.1.jar```
+* This will create a JAR in 
+ ```/home/rishabh/rishabh_mehta_hw2/project/target/scala-2.12/rishabh_mehta_hw2-assembly-0.1.jar```
 * This JAR can now be used to run MAPReduce Jobs
     * To run locally use the following command
     
-    
-    ```$ /usr/local/hadoop/bin/hadoop jar ~/rishabh_mehta_hw2/project/target/scala-2.12/rishabh_mehta_hw2-assembly-0.1.jar  ~/PATH_TO_INPUTDIR ~/PATH_TO_OUTPUTDIR```
+    ```
+    $ /usr/local/hadoop/bin/hadoop jar ~/rishabh_mehta_hw2/project/target/scala-2.12/rishabh_mehta_hw2-assembly-0.1.jar  ~/PATH_TO_INPUTDIR ~/PATH_TO_OUTPUTDIR
     
     
     Sample
-    ```$ /usr/local/hadoop/bin/hadoop jar ~/rishabh_mehta_hw2/project/target/scala-2.12/rishabh_mehta_hw2-assembly-0.1.jar ~/home/hadoop/input/ ~/home/hadoop/output/```
-     
+    $ /usr/local/hadoop/bin/hadoop jar ~/rishabh_mehta_hw2/project/target/scala-2.12/rishabh_mehta_hw2-assembly-0.1.jar ~/home/hadoop/input/ ~/home/hadoop/output/
+    ```
      
      Change usr/local/hadoop/bin/ to your local hadoop installation (HADOOP_HOME)                                                                                                                                                                                                                                                                              
     * Jobs can alternatively run on AWS EMR
