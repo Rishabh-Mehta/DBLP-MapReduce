@@ -4,9 +4,11 @@
 
 
 ## Instructions 
-Repository can be cloned using the following command <br/>
+Repository can be cloned using the following command 
 ```
+
 git clone https://rmehta35@bitbucket.org/cs441-fall2020/rishabh_mehta_hw2.git
+
 ```
 ### Prerequisites 
 * System needs to have hadoop,sbt installed 
@@ -29,17 +31,23 @@ and edit JobsToRun variable to include the jobs that you want to run .Default va
 * Additional details about implementation of Mapper and Reducer for the above jobs are present in their respective classes.
 * Once JobsToRun is finalised run the following commands to build JAR 
 ```
-$ sbt clean
-$ sbt assembly
+    $ sbt clean
+    $ sbt assembly
 ```
 * This will create a JAR in<br />  
 > ```/home/rishabh/rishabh_mehta_hw2/project/target/scala-2.12/rishabh_mehta_hw2-assembly-0.1.jar```
 * This JAR can now be used to run MAPReduce Jobs
-    * To run locally use the following command<br />
+    * To run locally use the following command
+    
+    
     ```$ /usr/local/hadoop/bin/hadoop jar ~/rishabh_mehta_hw2/project/target/scala-2.12/rishabh_mehta_hw2-assembly-0.1.jar  ~/PATH_TO_INPUTDIR ~/PATH_TO_OUTPUTDIR```
-    <br />Sample<br /> 
+    
+    
+    Sample
     ```$ /usr/local/hadoop/bin/hadoop jar ~/rishabh_mehta_hw2/project/target/scala-2.12/rishabh_mehta_hw2-assembly-0.1.jar ~/home/hadoop/input/ ~/home/hadoop/output/```
-     > Change usr/local/hadoop/bin/ to your local hadoop installation (HADOOP_HOME)                                                                                                                                                                                                                                                                              
+     
+     
+     Change usr/local/hadoop/bin/ to your local hadoop installation (HADOOP_HOME)                                                                                                                                                                                                                                                                              
     * Jobs can alternatively run on AWS EMR
         * For more details on how to run in AWS EMR refer to the video below
 
