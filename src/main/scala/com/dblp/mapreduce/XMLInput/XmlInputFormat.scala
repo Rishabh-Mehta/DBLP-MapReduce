@@ -10,6 +10,11 @@ import org.slf4j.{Logger, LoggerFactory}
 
 import scala.collection.mutable.{ArrayBuffer, HashMap}
 
+/**
+ *
+ * Credits: @link{https://github.com/pramo31/MapReduce-DBLPDataSet/tree/master/src/main/scala/com/cloud/mapreduce/paser/XmlInputFormat.scala}
+ */
+
 class XmlInputFormat extends TextInputFormat {
 
   final val logger: Logger = LoggerFactory.getLogger(XmlInputFormat.super.getClass)

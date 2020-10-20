@@ -1,16 +1,24 @@
 package com.dblp.mapreduce.author_stats
 
-import java.io.ByteArrayInputStream
 import java.lang
-
-import javax.xml.stream.XMLInputFactory
 import org.apache.hadoop.io.{IntWritable, LongWritable, Text}
 import org.apache.hadoop.mapreduce.{Mapper, Reducer}
 import org.apache.log4j.BasicConfigurator
 import org.slf4j.{Logger, LoggerFactory}
-
 import scala.collection.mutable
 import scala.jdk.CollectionConverters.IterableHasAsScala
+
+/**
+ * Task 5b   List 0f 100 Authors who publish without any co-authors.
+ * Mapper  : Maps ((Author,Publication),Author_Count) for each publication
+ * Reducer : Receives the mapper input from multiple publications and combines multiple inputs with same key and puts them in a HashMap[String, String]
+ *           with key Author and value of Author_Count,publication
+ * Cleanup : This receives the HashMap and we reformat it to make Author_Count as key and we sort with key in ascending order and select those
+ *            with Author_Count == 1 (i.e No Co-Authors) and select 100 from the resulting list.
+ */
+
+
+
 
 object Author_Low {
 
@@ -18,65 +26,23 @@ object Author_Low {
   val logger: Logger = LoggerFactory.getLogger(Author_Low.getClass)
 
   class Map extends Mapper[LongWritable, Text, Text, IntWritable] {
-
     override def map(key: LongWritable, value: Text, context: Mapper[LongWritable, Text, Text, IntWritable]#Context): Unit = {
-      try {
-        var document = value.toString
-        document = document.replaceAll("\n", "").replaceAll("&", "&amp;").replaceAll("'", "&apos;").replaceAll("^(.+)(<)([^>/a-zA-z_]{1}[^>]*)(>)(.+)$", "$1&lt;$3&gt;$5")
-        val reader = XMLInputFactory.newInstance.createXMLStreamReader(new ByteArrayInputStream(document.getBytes()))
-        var firstauth = true
-        var publication = ""
-        var authors = ""
-        var authorCount = 0
-        var firstTag = true
-        while (reader.hasNext) {
-          var author = ""
-          try {
-            reader.next
-            if (reader.isStartElement) {
-              if (firstTag) {
-                firstTag = false
-              }
-              val currentElement = reader.getLocalName
-              if (currentElement eq "author") {
-                if (firstauth) {
-                  author = reader.getElementText
-                  if (author.toString != "") {
-                    authors = author
-                  }
-                  authorCount += 1
-                  firstauth = false
-                }
-                else {
-                  authorCount += 1
-                  author = reader.getElementText
-                  if (author.toString != "") {
-                    authors = authors + "," + author
-                  }
-                }
-              }
-              if (currentElement eq "title") {
-                publication = reader.getElementText
-              }
-            }
-          }
-          catch {
-            case e: Exception =>
-              logger.error("Error parsing XML", e)
-          }
+      val fileDtd = getClass.getClassLoader.getResource("dblp.dtd").toURI
+      val inputXml =
+        s"""<?xml version="1.0" encoding="ISO-8859-1"?>
+      <!DOCTYPE dblp SYSTEM "$fileDtd">
+      <dblp>""" + value.toString + "</dblp>"
+
+      val preprocessedXML = xml.XML.loadString(inputXml)
+      val authors = (preprocessedXML \\ "author").map(author => author.text.toLowerCase.trim).toList.sorted
+      val publication = (preprocessedXML \\ "title")
+      val authorCount = authors.size
+
+      if (authorCount > 0 && publication != "") {
+        val output = new IntWritable(authorCount)
+        for (author_x <- authors) {
+          context.write(new Text(author_x.toString + "," + publication), output)
         }
-        reader.close()
-        if (authorCount > 0 && publication != "") {
-          val output = new IntWritable(authorCount)
-          for (author_x <- authors.split(",")) {
-            context.write(new Text(author_x.toString + "," + publication), output)
-          }
-        }
-      }
-      catch {
-        case e: Exception =>
-          logger.error("Error in parsing XML", e)
-          throw new Exception(e)
       }
     }
   }
@@ -116,7 +82,7 @@ object Author_Low {
     override def cleanup(context: Reducer[Text, IntWritable, Text, IntWritable]#Context): Unit = {
       val coauthor_sort = new mutable.HashMap[String, Integer]()
       coauthor_count_publication.foreach(entry => coauthor_sort.put(entry._1 + "," + entry._2.split(",")(1), entry._2.split(",")(0).toInt))
-      val least100 = coauthor_sort.toSeq.sortWith(_._2 < _._2).take(100)
+      val least100 = coauthor_sort.toSeq.sortWith(_._2 < _._2).filter(_._2 == 1)
       least100.foreach(ent => context.write(new Text(ent._1.toString), new IntWritable(ent._2)))
 
     }

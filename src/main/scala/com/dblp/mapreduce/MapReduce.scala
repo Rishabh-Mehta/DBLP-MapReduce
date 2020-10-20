@@ -13,6 +13,8 @@ import org.apache.hadoop.mapreduce.lib.output.{FileOutputFormat, TextOutputForma
 import org.apache.log4j.BasicConfigurator
 import org.slf4j.{Logger, LoggerFactory}
 
+
+
 object MapReduce {
   BasicConfigurator.configure()
   val logger: Logger = LoggerFactory.getLogger(MapReduce.getClass)

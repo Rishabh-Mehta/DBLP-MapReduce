@@ -1,8 +1,12 @@
+import sbt.util
+
 name := "rishabh_mehta_hw2"
 
 version := "0.1"
 
 scalaVersion := "2.13.3"
+
+logLevel := util.Level.Error
 
 // https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-common
 libraryDependencies += "org.apache.hadoop" % "hadoop-common" % "3.3.0"
