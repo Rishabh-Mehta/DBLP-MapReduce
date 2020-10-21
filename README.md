@@ -50,6 +50,7 @@ and edit JobsToRun variable to include the jobs that you want to run .Default va
 ```
      
 * Jobs can alternatively run on AWS EMR
-    * For more details on how to run in AWS EMR refer to the video below
+    * For more details on how to run in [AWS EMR refer to the video](https://youtu.be/qUcutmiGfrM)
+        * https://youtu.be/qUcutmiGfrM
 
   
