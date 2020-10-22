@@ -84,7 +84,7 @@ object Author_No_Coauthor {
       logger.info("CLeanup started for Reducer to sort and get 100")
       val coauthor_sort = new mutable.HashMap[String, Integer]()
       coauthor_count_publication.foreach(entry => coauthor_sort.put(entry._1 + ":" + entry._2.split(":")(1), entry._2.split(":")(0).toInt))
-      val least100 = coauthor_sort.toSeq.sortWith(_._2 < _._2).filter(_._2 == 1)
+      val least100 = coauthor_sort.toSeq.sortWith(_._2 < _._2).filter(_._2 == 1).take(100)
       least100.foreach(ent => context.write(new Text(ent._1.toString), new IntWritable(ent._2)))
 
     }
