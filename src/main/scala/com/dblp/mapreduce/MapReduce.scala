@@ -44,12 +44,13 @@ object MapReduce {
       job.setMapOutputKeyClass(classOf[Text])
       job.setMapOutputValueClass(classOf[IntWritable])
       job.setInputFormatClass(classOf[XmlInputFormat])
-      job.setOutputFormatClass(classOf[TextOutputFormat[_, _]])
+
       FileInputFormat.addInputPath(job, inputPath)
       FileOutputFormat.setOutputPath(job, outputPathFirstJob)
 
       if (jobname.trim.equals("Top_Authors_Published_Venue")) {
         logger.info("Starting Author_Publications Top 10 Authors with highest publications at the venue")
+        job.setOutputFormatClass(classOf[TextOutputFormat[Text, Text]])
         job.setJarByClass(author_publication.Top_Authors_Published_Venue.getClass)
         job.setMapperClass(classOf[com.dblp.mapreduce.author_publication.Top_Authors_Published_Venue.Map])
         job.setReducerClass(classOf[com.dblp.mapreduce.author_publication.Top_Authors_Published_Venue.Reduce])
@@ -59,6 +60,7 @@ object MapReduce {
 
       } else if (jobname.trim.equals("PublicationVenueOneAuthor")) {
         logger.info("Starting publication_venue , Publications at each Venue with one Author")
+        job.setOutputFormatClass(classOf[TextOutputFormat[Text, IntWritable]])
         job.setJarByClass(com.dblp.mapreduce.publication_venue.Publication_Venue_OneAuthor.getClass)
         job.setMapperClass(classOf[com.dblp.mapreduce.publication_venue.Publication_Venue_OneAuthor.Map])
         job.setReducerClass(classOf[com.dblp.mapreduce.publication_venue.Publication_Venue_OneAuthor.Reduce])
@@ -67,6 +69,7 @@ object MapReduce {
 
       } else if (jobname.trim.equals("Publication_Highest_Authors_Venues")) {
         logger.info("Starting publication_venue , Publication with Highest Authors at Venues")
+        job.setOutputFormatClass(classOf[TextOutputFormat[Text, IntWritable]])
         job.setJarByClass(Publication_Venue_HighestAuthor.getClass)
         job.setMapperClass(classOf[com.dblp.mapreduce.publication_venue.Publication_Venue_HighestAuthor.Map])
         job.setReducerClass(classOf[com.dblp.mapreduce.publication_venue.Publication_Venue_HighestAuthor.Reduce])
@@ -74,6 +77,7 @@ object MapReduce {
 
       } else if (jobname.trim.equals("Author_Most_Coauthor")) {
         logger.info("Starting AuthorStats  and Top 100 collaborating authors job")
+        job.setOutputFormatClass(classOf[TextOutputFormat[Text, IntWritable]])
         job.setJarByClass(com.dblp.mapreduce.author_stats.Author_Most_Coauthor.getClass)
         job.setMapperClass(classOf[com.dblp.mapreduce.author_stats.Author_Most_Coauthor.Map])
         job.setReducerClass(classOf[com.dblp.mapreduce.author_stats.Author_Most_Coauthor.Reduce])
@@ -81,6 +85,7 @@ object MapReduce {
       }
       else if (jobname.trim.equals("Author_No_Coauthor")) {
         logger.info("Starting AuthorStats  Least 100 collaborating authors job")
+        job.setOutputFormatClass(classOf[TextOutputFormat[Text, IntWritable]])
         job.setJarByClass(com.dblp.mapreduce.author_stats.Author_No_Coauthor.getClass)
         job.setMapperClass(classOf[com.dblp.mapreduce.author_stats.Author_No_Coauthor.Map])
         job.setReducerClass(classOf[com.dblp.mapreduce.author_stats.Author_No_Coauthor.Reduce])
@@ -89,6 +94,7 @@ object MapReduce {
 
       else if (jobname.trim.equals("Author_Published_Consecutively")) {
         logger.info("Starting Author_Years  Authors publishing without interruption for N >=10 years")
+        job.setOutputFormatClass(classOf[TextOutputFormat[Text, Text]])
         job.setJarByClass(com.dblp.mapreduce.author_years.Author_Published_Consecutively.getClass)
         job.setMapperClass(classOf[com.dblp.mapreduce.author_years.Author_Published_Consecutively.Map])
         job.setReducerClass(classOf[com.dblp.mapreduce.author_years.Author_Published_Consecutively.Reduce])
