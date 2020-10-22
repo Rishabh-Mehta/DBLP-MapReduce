@@ -56,7 +56,7 @@ object Publication_Venue_HighestAuthor {
         var firsttag = true
         var xmlElement = ""
         var venue = ""
-        logger.info("Starting to read venue")
+
         while (reader.hasNext) {
           try {
             reader.next

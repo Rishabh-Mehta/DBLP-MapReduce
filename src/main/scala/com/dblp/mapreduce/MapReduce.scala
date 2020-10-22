@@ -41,7 +41,7 @@ object MapReduce {
       val outputPathFirstJob = new Path(args(1).toString+jobname)
       //val outputPathFirstJob = new Path("s3://com.dblp.mapreduce.rmehta35/output/"+ jobname)
       //val outputPathFirstJob = new Path("/home/hadoop/output/"+ jobname)
-      outputPathFirstJob.getFileSystem(configuration).delete(outputPathFirstJob, true)
+
 
       job.setInputFormatClass(classOf[XmlInputFormat])
 
@@ -50,6 +50,7 @@ object MapReduce {
 
       if (jobname.trim.equals("Top_Authors_Published_Venue")) {
         logger.info("Starting Author_Publications Top 10 Authors with highest publications at the venue")
+        outputPathFirstJob.getFileSystem(configuration).delete(outputPathFirstJob, true)
         job.setOutputKeyClass(classOf[Text])
         job.setOutputValueClass(classOf[Text])
         job.setMapOutputKeyClass(classOf[Text])
@@ -64,6 +65,7 @@ object MapReduce {
 
       } else if (jobname.trim.equals("PublicationVenueOneAuthor")) {
         logger.info("Starting publication_venue , Publications at each Venue with one Author")
+        outputPathFirstJob.getFileSystem(configuration).delete(outputPathFirstJob, true)
         job.setOutputKeyClass(classOf[Text])
         job.setOutputValueClass(classOf[IntWritable])
         job.setMapOutputKeyClass(classOf[Text])
@@ -77,6 +79,7 @@ object MapReduce {
 
       } else if (jobname.trim.equals("Publication_Highest_Authors_Venues")) {
         logger.info("Starting publication_venue , Publication with Highest Authors at Venues")
+        outputPathFirstJob.getFileSystem(configuration).delete(outputPathFirstJob, true)
         job.setOutputKeyClass(classOf[Text])
         job.setOutputValueClass(classOf[IntWritable])
         job.setMapOutputKeyClass(classOf[Text])
@@ -89,6 +92,7 @@ object MapReduce {
 
       } else if (jobname.trim.equals("Author_Most_Coauthor")) {
         logger.info("Starting AuthorStats  and Top 100 collaborating authors job")
+        outputPathFirstJob.getFileSystem(configuration).delete(outputPathFirstJob, true)
         job.setOutputKeyClass(classOf[Text])
         job.setOutputValueClass(classOf[IntWritable])
         job.setMapOutputKeyClass(classOf[Text])
@@ -102,6 +106,7 @@ object MapReduce {
       }
       else if (jobname.trim.equals("Author_No_Coauthor")) {
         logger.info("Starting AuthorStats  Least 100 collaborating authors job")
+        outputPathFirstJob.getFileSystem(configuration).delete(outputPathFirstJob, true)
         job.setOutputKeyClass(classOf[Text])
         job.setOutputValueClass(classOf[IntWritable])
         job.setMapOutputKeyClass(classOf[Text])
@@ -111,11 +116,12 @@ object MapReduce {
         job.setMapperClass(classOf[com.dblp.mapreduce.author_stats.Author_No_Coauthor.Map])
         job.setReducerClass(classOf[com.dblp.mapreduce.author_stats.Author_No_Coauthor.Reduce])
         job.waitForCompletion(true)
-        WriteCsv.converttocsv_String_Int(outputPath+jobname,jobname)
+        WriteCsv.converttocsv_String_Int(outputPath,jobname)
       }
 
       else if (jobname.trim.equals("Author_Published_Consecutively")) {
         logger.info("Starting Author_Years  Authors publishing without interruption for N >=10 years")
+        outputPathFirstJob.getFileSystem(configuration).delete(outputPathFirstJob, true)
         job.setOutputKeyClass(classOf[Text])
         job.setOutputValueClass(classOf[IntWritable])
         job.setMapOutputKeyClass(classOf[Text])

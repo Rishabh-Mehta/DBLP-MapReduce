@@ -73,7 +73,7 @@ object Publication_Venue_OneAuthor {
         if (authorCount == 1  && venue != "" && publication != "") {
           val output = new IntWritable(authorCount)
           context.write(new Text(publication+ ":" +venue), output)
-          logger.info("Mapper Input "+publication+":"+venue+" "+output)
+          logger.info("Mapper Output "+publication+":"+venue+" "+output)
         }
       }
       catch {
