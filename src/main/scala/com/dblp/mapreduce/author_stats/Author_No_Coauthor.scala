@@ -35,7 +35,7 @@ object Author_No_Coauthor {
 
       val preprocessedXML = xml.XML.loadString(inputXml)
       val authors = (preprocessedXML \\ "author").map(author => author.text.toLowerCase.trim).toList.sorted
-      val publication = (preprocessedXML \\ "@title").toString()
+      val publication = (preprocessedXML \\ "title").text.toString
       val authorCount = authors.size
 
       if (authorCount ==1 && publication != "") {

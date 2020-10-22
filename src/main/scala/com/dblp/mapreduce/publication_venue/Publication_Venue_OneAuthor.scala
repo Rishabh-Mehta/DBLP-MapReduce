@@ -43,7 +43,7 @@ object Publication_Venue_OneAuthor {
 
         val preprocessedXML = xml.XML.loadString(inputXml)
         val authors = (preprocessedXML \\ "author").map(author => author.text.toLowerCase.trim).toList.sorted
-        val publication = (preprocessedXML \\ "@title").toString()
+        val publication = (preprocessedXML \\ "title").text.toString
         val authorCount = authors.size
         var document = value.toString
         document = document.replaceAll("\n", "").replaceAll("&", "&amp;").replaceAll("'", "&apos;").replaceAll("^(.+)(<)([^>/a-zA-z_]{1}[^>]*)(>)(.+)$", "$1&lt;$3&gt;$5")

@@ -33,7 +33,7 @@ object Author_Published_Consecutively {
           <dblp>""" + value.toString + "</dblp>"
         val preprocessedXML = xml.XML.loadString(inputXml)
         val authors = (preprocessedXML \\ "author").map(author => author.text.toLowerCase.trim).toList.sorted
-        val pub_year = (preprocessedXML \\ "@year").toString()
+        val pub_year = (preprocessedXML \\ "year").text.toString
         val authorCount = authors.size
 
         if (authorCount > 0 && pub_year != "") {

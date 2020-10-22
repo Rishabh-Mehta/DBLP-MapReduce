@@ -27,6 +27,8 @@ libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "2.0.0-M2"
 // https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12
 libraryDependencies += "org.slf4j" % "slf4j-log4j12" % "1.2" % Test
 
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % "test"
+
 
 assemblyMergeStrategy in assembly := {
   case PathList("META-INF", xs@_*) => MergeStrategy.discard

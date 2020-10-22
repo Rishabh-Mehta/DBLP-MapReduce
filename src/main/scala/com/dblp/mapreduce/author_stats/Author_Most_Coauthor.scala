@@ -30,15 +30,19 @@ object Author_Most_Coauthor {
       <dblp>""" + value.toString + "</dblp>"
 
       val preprocessedXML = xml.XML.loadString(inputXml)
+
       val authors = (preprocessedXML \\ "author").map(author => author.text.toLowerCase.trim).toList.sorted
-      val publication = (preprocessedXML \\ "@title").toString()
+
+      val publication = (preprocessedXML \\ "title").text.toString
+
       val authorCount = authors.size
+
 
       if (authorCount > 0 && publication != "") {
           val output = new IntWritable(authorCount)
           for (author_x <- authors) {
             context.write(new Text(author_x.toString + ":" + publication), output)
-            logger.info("Mapper Output "+author_x.toString+":"+publication+","+output)
+            //logger.info("Mapper Output "+author_x.toString+":"+publication+","+output)
           }
         }
     }

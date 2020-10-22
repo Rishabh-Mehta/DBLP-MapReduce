@@ -33,7 +33,7 @@ object Top_Authors_Published_Venue {
 
   class Map extends Mapper[LongWritable, Text, Text, IntWritable] {
     override def map(key: LongWritable, value: Text, context: Mapper[LongWritable, Text, Text, IntWritable]#Context): Unit = {
-      logger.info("In Mapper")
+
 
       try {
 
@@ -45,7 +45,7 @@ object Top_Authors_Published_Venue {
         val preprocessedXML = xml.XML.loadString(inputXml)
         val authors = (preprocessedXML \\ "author").map(author => author.text.toLowerCase.trim).toList.sorted
 
-        val publication = (preprocessedXML \\ "@title").toString()
+        val publication = (preprocessedXML \\ "title").text
 
         val authorCount = authors.size
         var document = value.toString
