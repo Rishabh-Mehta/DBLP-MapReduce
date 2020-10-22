@@ -118,7 +118,7 @@ object Publication_Venue_OneAuthor {
       }
     }
     override def cleanup(context: Reducer[Text, IntWritable, Text, IntWritable]#Context): Unit = {
-      author_count_publication.foreach(entry => context.write(new Text(entry._1 + "->" + entry._2), new IntWritable(entry._2.split(",")(0).toInt)))
+      author_count_publication.foreach(entry => context.write(new Text(entry._1 + "->" + entry._2), new IntWritable(entry._2.split(":")(0).toInt)))
 
     }
 
