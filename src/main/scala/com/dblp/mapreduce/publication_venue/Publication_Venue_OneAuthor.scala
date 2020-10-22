@@ -72,7 +72,8 @@ object Publication_Venue_OneAuthor {
         reader.close()
         if (authorCount == 1  && venue != "" && publication != "") {
           val output = new IntWritable(authorCount)
-          context.write(new Text(publication+ "," +venue), output)
+          context.write(new Text(publication+ ":" +venue), output)
+          logger.info("Mapper Input "+publication+":"+venue+" "+output)
         }
       }
       catch {
@@ -92,27 +93,28 @@ object Publication_Venue_OneAuthor {
       var sum = 0
       val scalaValues = values.asScala
       scalaValues.foreach(values => sum += values.get)
+      logger.info("Reducer Input "+key+" "+scalaValues)
       var mapval = ""
       var old = ""
       var output = ""
-      val keys = key.toString.split(",")
+      val keys = key.toString.split(":")
       val publication = keys(0)
       val venue = keys(1).toString
       val authorcount = sum
       if (author_count_publication.contains(venue)) {
         mapval = author_count_publication(venue)
-        old = mapval.toString.split(",")(0)
+        old = mapval.toString.split(":")(0)
         if (old.toInt < authorcount) {
-          output = authorcount.toString + "," + publication
+          output = authorcount.toString + ":" + publication
           author_count_publication.update(venue, output)
         }
         else if (old.toInt == authorcount) {
-          output = mapval.appendedAll("," + publication)
-          author_count_publication.update(venue, mapval + "," + publication)
+          output = mapval+":" +publication
+          author_count_publication.update(venue,output)
         }
       }
       else {
-        author_count_publication.put(venue, authorcount.toString + "," + publication)
+        author_count_publication.put(venue, authorcount.toString + ":" + publication)
       }
     }
     override def cleanup(context: Reducer[Text, IntWritable, Text, IntWritable]#Context): Unit = {

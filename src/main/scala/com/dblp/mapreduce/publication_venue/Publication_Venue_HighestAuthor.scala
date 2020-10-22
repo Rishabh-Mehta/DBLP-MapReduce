@@ -15,7 +15,7 @@ import scala.jdk.CollectionConverters.IterableHasAsScala
 import scala.util.control.Breaks.break
 
 /**
- * Task 4    List of all publications that contain the highest number of authora at each venue.
+ * Task 4    List of all publications that contain the highest number of authors at each venue.
  * Mapper  : Maps ((Publication,Venue),Author_Count)
  * Reducer : Receives the mapper input and here we check every Reducer input and insert it into a TreeMap[String, String]
  *           with Venue as key and (Author_Count,Publication) as value.For every Reducer input we check if that venue is
@@ -47,6 +47,7 @@ object Publication_Venue_HighestAuthor {
         val preprocessedXML = xml.XML.loadString(inputXml)
         val authors = (preprocessedXML \\ "author").map(author => author.text.toLowerCase.trim).toList.sorted
         val publication = (preprocessedXML \\ "@title").toString()
+        logger.info("publication "+publication)
         val authorCount = authors.size
         var document = value.toString
         document = document.replaceAll("\n", "").replaceAll("&", "&amp;").replaceAll("'", "&apos;").replaceAll("^(.+)(<)([^>/a-zA-z_]{1}[^>]*)(>)(.+)$", "$1&lt;$3&gt;$5")
@@ -55,6 +56,7 @@ object Publication_Venue_HighestAuthor {
         var firsttag = true
         var xmlElement = ""
         var venue = ""
+        logger.info("Starting to read venue")
         while (reader.hasNext) {
           try {
             reader.next
@@ -78,7 +80,8 @@ object Publication_Venue_HighestAuthor {
         reader.close()
         if (authorCount > 0 && venue != "" && publication != "") {
           val output = new IntWritable(authorCount)
-          context.write(new Text(publication + "," + venue), output)
+          context.write(new Text(publication + ":" + venue), output)
+          logger.info("Mapper Output "+publication+":"+venue+" "+output)
         }
       }
       catch {
@@ -100,29 +103,30 @@ object Publication_Venue_HighestAuthor {
       var mapval = ""
       var old = ""
       var output = ""
-      val keys = key.toString.split(",")
+      val keys = key.toString.split(":")
       val publication = keys(0)
       val venue = keys(1).toString
       val authorcount = sum
       if (author_count_publication.contains(venue)) {
         mapval = author_count_publication(venue)
-        old = mapval.toString.split(",")(0)
+        old = mapval.toString.split(":")(0)
         if (old.toInt < authorcount) {
-          output = authorcount.toString + "," + publication
+          output = authorcount.toString + ":" + publication
           author_count_publication.update(venue, output)
         }
         else if (old.toInt == authorcount) {
-          output = mapval.appendedAll("," + publication)
-          author_count_publication.update(venue, mapval + "," + publication)
+          output = mapval.appendedAll(":" + publication)
+          author_count_publication.update(venue, mapval + ":" + publication)
         }
       }
       else {
-        author_count_publication.put(venue, authorcount.toString + "," + publication)
+        author_count_publication.put(venue, authorcount.toString + ":" + publication)
       }
     }
 
     override def cleanup(context: Reducer[Text, IntWritable, Text, IntWritable]#Context): Unit = {
-      author_count_publication.foreach(entry => context.write(new Text(entry._1 + "->" + entry._2.split(",")(1)), new IntWritable(entry._2.split(",")(0).toInt)))
+      logger.info("Reducer Output "+author_count_publication)
+      author_count_publication.foreach(entry => context.write(new Text(entry._1 + "->" + entry._2.split(":")(1)), new IntWritable(entry._2.split(":")(0).toInt)))
     }
 
 

@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory
 
 import scala.collection.mutable
 import scala.jdk.CollectionConverters.IterableHasAsScala
-import scala.util.control.Breaks.break
+
 
 
 /**
@@ -33,6 +33,7 @@ object Top_Authors_Published_Venue {
 
   class Map extends Mapper[LongWritable, Text, Text, IntWritable] {
     override def map(key: LongWritable, value: Text, context: Mapper[LongWritable, Text, Text, IntWritable]#Context): Unit = {
+      logger.info("In Mapper")
 
       try {
 
@@ -45,6 +46,7 @@ object Top_Authors_Published_Venue {
         val authors = (preprocessedXML \\ "author").map(author => author.text.toLowerCase.trim).toList.sorted
 
         val publication = (preprocessedXML \\ "@title").toString()
+
         val authorCount = authors.size
         var document = value.toString
         document = document.replaceAll("\n", "").replaceAll("&", "&amp;").replaceAll("'", "&apos;").replaceAll("^(.+)(<)([^>/a-zA-z_]{1}[^>]*)(>)(.+)$", "$1&lt;$3&gt;$5")
@@ -75,7 +77,8 @@ object Top_Authors_Published_Venue {
         reader.close()
         if (authorCount > 0 && venue != "") {
           for (author_x <- authors) {
-            context.write(new Text(author_x+","+venue ), outValue)
+            context.write(new Text(author_x+":"+venue ), outValue)
+            logger.debug("Mapper Output"+author_x+" "+venue+" "+outValue)
 
           }
         }
@@ -96,12 +99,15 @@ object Top_Authors_Published_Venue {
       var sum = 0
       val scalaValues = values.asScala
       scalaValues.foreach(values => sum += values.get)
+      logger.debug("Reducer Input "+key.toString+" "+scalaValues)
       result.set(sum)
       //context.write(key, result)
       top_authors_venue.put(key.toString, result.get())
+      logger.debug("Reducer Output "+key.toString+" "+result.get())
     }
     override def cleanup(context: Reducer[Text, IntWritable, Text, Text]#Context): Unit = {
-      val grouped = top_authors_venue.groupBy((k) => k._1.toString.split(",")(1))
+      logger.debug("Cleanup Starting to sort Reducer Output")
+      val grouped = top_authors_venue.groupBy((k) => k._1.toString.split(":")(1))
       grouped.foreach(k => context.write(new Text(k._2.toSeq.sortWith(_._2 > _._2).take(10).toString), new Text(k._1)))
 
     }

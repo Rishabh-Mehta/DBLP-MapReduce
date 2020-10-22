@@ -41,6 +41,7 @@ object Author_Published_Consecutively {
 
           for (author_x <- authors) {
             context.write(new Text(author_x.toString), output)
+            logger.info("Mapper Input "+author_x+" "+output)
 
 
           }
@@ -59,6 +60,7 @@ object Author_Published_Consecutively {
     override def reduce(key: Text, values: lang.Iterable[IntWritable], context: Reducer[Text, IntWritable, Text, IntWritable]#Context): Unit = {
       val scalaValues = new mutable.TreeSet[Int]()
       values.forEach(value => scalaValues.add(value.toString.toInt))
+      logger.info("Reducer input "+key+" "+scalaValues)
       var ranges = mutable.ArrayBuffer[Int](1)
       scalaValues.toSeq.sliding(2).foreach {
         case y1 :: tail => if (tail.nonEmpty) {
@@ -72,6 +74,7 @@ object Author_Published_Consecutively {
       //logger.info("Reducer Input ,"+key.toString+" , "+scalaValues+" "+ranges.max)
       if (ranges.max >= 10) {
         context.write(key, new IntWritable(ranges.max))
+        logger.info("Reducer Output "+key+" "+ranges.max)
       }
 
       //author_published_years.put(key.toString,scalaValues)

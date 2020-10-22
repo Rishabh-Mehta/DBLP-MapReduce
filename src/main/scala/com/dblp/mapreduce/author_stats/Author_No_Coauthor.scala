@@ -38,10 +38,10 @@ object Author_No_Coauthor {
       val publication = (preprocessedXML \\ "@title").toString()
       val authorCount = authors.size
 
-      if (authorCount > 0 && publication != "") {
+      if (authorCount ==1 && publication != "") {
         val output = new IntWritable(authorCount)
         for (author_x <- authors) {
-          context.write(new Text(author_x.toString + "," + publication), output)
+          context.write(new Text(author_x.toString + ":" + publication), output)
         }
       }
     }
@@ -55,7 +55,7 @@ object Author_No_Coauthor {
       val scalaValues = values.asScala
       scalaValues.foreach(values => sum += values.get)
       val authorcount = sum
-      val keys = key.toString.split(",")
+      val keys = key.toString.split(":")
       val author = keys(0)
       val publication = keys(1)
       var mapval = ""
@@ -63,25 +63,27 @@ object Author_No_Coauthor {
       var output = ""
       if (coauthor_count_publication.contains(author)) {
         mapval = coauthor_count_publication(author)
-        old = mapval.split(",")(0)
+        old = mapval.split(":")(0)
         if (old.toInt < authorcount) {
-          output = authorcount.toString + "," + publication
+          output = authorcount.toString + ":" + publication
           coauthor_count_publication.update(author, output)
         }
         else if (old.toInt == sum) {
-          output = mapval.toString + "," + publication
+          output = mapval.toString + ":" + publication
           coauthor_count_publication.update(author, output)
         }
       }
       else {
-        output = authorcount.toString + "," + publication
+        output = authorcount.toString + ":" + publication
         coauthor_count_publication.put(author, output)
       }
     }
 
     override def cleanup(context: Reducer[Text, IntWritable, Text, IntWritable]#Context): Unit = {
+      logger.info("Input to clean up "+coauthor_count_publication.toString())
+      logger.info("CLeanup started for Reducer to sort and get 100")
       val coauthor_sort = new mutable.HashMap[String, Integer]()
-      coauthor_count_publication.foreach(entry => coauthor_sort.put(entry._1 + "," + entry._2.split(",")(1), entry._2.split(",")(0).toInt))
+      coauthor_count_publication.foreach(entry => coauthor_sort.put(entry._1 + ":" + entry._2.split(":")(1), entry._2.split(":")(0).toInt))
       val least100 = coauthor_sort.toSeq.sortWith(_._2 < _._2).filter(_._2 == 1)
       least100.foreach(ent => context.write(new Text(ent._1.toString), new IntWritable(ent._2)))
 

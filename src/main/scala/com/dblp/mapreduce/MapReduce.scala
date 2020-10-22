@@ -34,7 +34,7 @@ object MapReduce {
       val configuration = new Configuration
       val job = Job.getInstance(configuration, jobname)
       job.setNumReduceTasks(1)
-      configuration.set("mapreduce.output.textoutputformat.separator", ",")
+      configuration.set("mapred.output.textoutputformat.separator", ",")
       val outputPathFirstJob = new Path(args(1).toString+jobname)
       //val outputPathFirstJob = new Path("s3://com.dblp.mapreduce.rmehta35/output/"+ jobname)
       //val outputPathFirstJob = new Path("/home/hadoop/output/"+ jobname)
