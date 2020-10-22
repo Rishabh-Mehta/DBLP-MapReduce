@@ -60,6 +60,7 @@ object MapReduce {
         job.setMapperClass(classOf[com.dblp.mapreduce.author_publication.Top_Authors_Published_Venue.Map])
         job.setReducerClass(classOf[com.dblp.mapreduce.author_publication.Top_Authors_Published_Venue.Reduce])
         job.waitForCompletion(true)
+        WriteCsv.converttocsv_String_String(outputPath+jobname+"/",jobname)
 
 
 
@@ -102,7 +103,7 @@ object MapReduce {
         job.setMapperClass(classOf[com.dblp.mapreduce.author_stats.Author_Most_Coauthor.Map])
         job.setReducerClass(classOf[com.dblp.mapreduce.author_stats.Author_Most_Coauthor.Reduce])
         job.waitForCompletion(true)
-        WriteCsv.converttocsv_String_Int(outputPath+jobname,jobname)
+
       }
       else if (jobname.trim.equals("Author_No_Coauthor")) {
         logger.info("Starting AuthorStats  Least 100 collaborating authors job")
@@ -116,7 +117,7 @@ object MapReduce {
         job.setMapperClass(classOf[com.dblp.mapreduce.author_stats.Author_No_Coauthor.Map])
         job.setReducerClass(classOf[com.dblp.mapreduce.author_stats.Author_No_Coauthor.Reduce])
         job.waitForCompletion(true)
-        WriteCsv.converttocsv_String_Int(outputPath,jobname)
+        WriteCsv.converttocsv_String_Int(outputPath+jobname+"/",jobname)
       }
 
       else if (jobname.trim.equals("Author_Published_Consecutively")) {
@@ -131,7 +132,7 @@ object MapReduce {
         job.setMapperClass(classOf[com.dblp.mapreduce.author_years.Author_Published_Consecutively.Map])
         job.setReducerClass(classOf[com.dblp.mapreduce.author_years.Author_Published_Consecutively.Reduce])
         job.waitForCompletion(true)
-        WriteCsv.converttocsv_String_Int(outputPath+jobname,jobname)
+        WriteCsv.converttocsv_String_Int(outputPath+jobname+"/",jobname)
 
       }
 

@@ -42,7 +42,7 @@ object Author_No_Coauthor {
         val output = new IntWritable(authorCount)
         for (author_x <- authors) {
           context.write(new Text(author_x.toString + ":" + publication), output)
-          logger.info("Mapper Input "+author_x+":"+publication+" "+output)
+          logger.info("Mapper output "+author_x+":"+publication+" "+output)
         }
       }
     }
