@@ -53,4 +53,6 @@ and edit JobsToRun variable to include the jobs that you want to run .Default va
     * For more details on how to run in [AWS EMR refer to the video](https://youtu.be/qUcutmiGfrM)
         * https://youtu.be/qUcutmiGfrM
 
-  
+### Output
+* Output can be found in Output folder
+> Output for Authors with most coauthors and Publications with one author could not be added as Execution was still running
