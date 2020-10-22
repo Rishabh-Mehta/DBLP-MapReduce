@@ -115,8 +115,8 @@ object Publication_Venue_HighestAuthor {
           author_count_publication.update(venue, output)
         }
         else if (old.toInt == authorcount) {
-          output = mapval.appendedAll(":" + publication)
-          author_count_publication.update(venue, mapval + ":" + publication)
+          output = mapval + publication
+          author_count_publication.update(venue, output)
         }
       }
       else {
@@ -126,7 +126,7 @@ object Publication_Venue_HighestAuthor {
 
     override def cleanup(context: Reducer[Text, IntWritable, Text, IntWritable]#Context): Unit = {
       logger.info("Reducer Output "+author_count_publication)
-      author_count_publication.foreach(entry => context.write(new Text(entry._1 + "->" + entry._2.split(":")(1)), new IntWritable(entry._2.split(":")(0).toInt)))
+      author_count_publication.foreach(entry => context.write(new Text(entry._1 + "->" + entry._2.split(":").last), new IntWritable(entry._2.split(":")(0).toInt)))
     }
 
 

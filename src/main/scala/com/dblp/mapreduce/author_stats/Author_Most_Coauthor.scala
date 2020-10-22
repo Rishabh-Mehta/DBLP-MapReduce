@@ -69,7 +69,7 @@ object Author_Most_Coauthor {
           coauthor_count_publication.update(author, output)
         }
         else if (old.toInt == sum) {
-          output = mapval.toString + ":" + publication
+          output = mapval.toString + publication
           coauthor_count_publication.update(author, output)
         }
       }
@@ -81,8 +81,9 @@ object Author_Most_Coauthor {
 
     override def cleanup(context: Reducer[Text, IntWritable, Text, IntWritable]#Context): Unit = {
       logger.info("CLeanup started for Reducer to sort Top100")
+      logger.info(coauthor_count_publication.toSeq.toString())
       val coauthor_sort = new mutable.HashMap[String, Integer]()
-      coauthor_count_publication.foreach(entry => coauthor_sort.put(entry._1 + ":" + entry._2.split(":")(1), entry._2.split(":")(0).toInt))
+      coauthor_count_publication.foreach(entry => coauthor_sort.put(entry._1 + ":" + entry._2.split(":").last, entry._2.split(":")(0).toInt))
       val top100 = coauthor_sort.toSeq.sortWith(_._2 > _._2).take(100)
       top100.foreach(ent => context.write(new Text(ent._1.toString), new IntWritable(ent._2)))
 
